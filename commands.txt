@@ -1,0 +1,8 @@
+Here is a list of potential commands and their uses:
+	inspect [Object/Item]
+   	Displays information about the item
+      Takes 5 minutes
+   scout
+   	Looks around the area, displays information about surroundings and objects in the area.
+   inventory
+   	Opens your inventory

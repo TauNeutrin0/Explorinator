@@ -1,0 +1,1 @@
+{"builders":{"configs":{}},"mixinTypes":[],"runners":{"configs":{"project:/100mb%20Apache%202":{"ram":100,"variables":{"configurationType":"javascript/web"},"options":{}},"system:/javascript/web/simple":{"ram":1000,"variables":{},"options":{}}},"default":"project:/100mb%20Apache%202"},"type":"BasicJS","attributes":{"framework":["BasicJS"],"language":["javascript"]}}
