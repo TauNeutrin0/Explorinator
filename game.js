@@ -2,7 +2,8 @@ var map;
 var mapSize = [360,360];
 var mapScale = 3;//scale of features will be 2^mapscale
 var mapVariance = 0.3;
-var mapBiome;// 1-grassland, 2-forest, 3-desert, 4-rock
+var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
+
 
 function writeTxtSty(text,color,bold) {
   var e = document.createElement('span');
@@ -29,14 +30,52 @@ function submitText(text) {
 function init() {
   writeTxt("You wake up lying on the floor. Where are you? I guess you'd better find out.");
   NL();
-  var heightMap = initMap(mapSize,mapScale,mapVariance);
-  var humidityMap = initMap(mapSize,mapScale,mapVariance);
-  
-  writeMap(heightMap);
+  var mapHeight = initMap(mapSize,mapScale,mapVariance,true);
+  var mapHumidity = initMap(mapSize,mapScale,mapVariance,false);
+  var mapBiome = JSON.parse(JSON.stringify(mapHeight));
+  for(i=0;i<mapHeight.length;i++){
+    for(j=0;j<mapHeight[i].length;j++){
+      if(mapHeight[i][j]<-0.8) {
+        mapBiome[i][j] = 0;
+      } else if(mapHumidity[i][j]<-0.8) {
+        mapBiome[i][j] = 3;
+      } else if(mapHeight[i][j]<-0.75) {
+        mapBiome[i][j] = 5;
+      } else if(mapHeight[i][j]<-0.5) {
+        if(mapHumidity[i][j]>1.5){
+          mapBiome[i][j] = 6;
+        } else {
+          mapBiome[i][j] = 1;
+        }
+      } else if(mapHeight[i][j]<0.5) {
+        if(mapHumidity[i][j]<-0.75){
+          mapBiome[i][j] = 3;
+        } else if(mapHumidity[i][j]>0.5){
+          mapBiome[i][j] = 2;
+        } else {
+          mapBiome[i][j] = 1;
+        }
+      } else if(mapHeight[i][j]<0.75) {
+        if(mapHumidity[i][j]<-0.85){
+          mapBiome[i][j] = 3;
+        } else if(mapHumidity[i][j]>0.3){
+          mapBiome[i][j] = 2;
+        } else {
+          mapBiome[i][j] = 1;
+        }
+      } else {
+        mapBiome[i][j] = 4;
+      }
+      
+    }
+  }
+  writeMapShaded(mapHeight);
+  NL();
+  writeMapBiome(mapBiome);
   NL();
 }
 
-function writeMap(m) {
+function writeMapShaded(m) {
   NL();
   for(i=0;i<m.length;i++) {
     for(j=0;j<m[0].length;j++) {
@@ -47,7 +86,38 @@ function writeMap(m) {
   NL();
 }
 
-function initMap(mSize,mScale,mVariance) {
+function writeMapBiome(m) {
+  NL();
+  for(i=0;i<m.length;i++) {
+    for(j=0;j<m[0].length;j++) {
+      if(m[i][j]==0){
+        writeTxtSty("\u2588\u2588","Blue",true);
+      } else if (m[i][j]==1) {
+        writeTxtSty("\u2588\u2588","#99ff66",true);
+      } else if (m[i][j]==2) {
+        writeTxtSty("\u2588\u2588","#006600",true);
+      } else if (m[i][j]==3) {
+        writeTxtSty("\u2588\u2588","Yellow",true);
+      } else if (m[i][j]==4) {
+        writeTxtSty("\u2588\u2588","Gray",true);
+      } else if (m[i][j]==5) {
+        writeTxtSty("\u2588\u2588","Orange",true);
+      } else if (m[i][j]==6) {
+        writeTxtSty("\u2588\u2588","#33cccc",true);
+        alert(6);
+      } else {
+        if(i==100){
+          alert(i+" "+j+" "+m[i][j]);
+        }
+      }
+      //writeTxtSty("\u2588\u2588","#"+Math.round((m[i][j]+1.2)*255/2.4).toString(16)+Math.round((m[i][j]+1.2)*255/2.4).toString(16)+Math.round((m[i][j]+1.2)*255/2.4).toString(16),true);
+    }
+    NL();
+  }
+  NL();
+}
+
+function initMap(mSize,mScale,mVariance,water) {
   var size = [Math.ceil(mSize[0]/Math.pow(2,mScale))*mScale+1,Math.ceil(mSize[1]/Math.pow(2,mScale))*mScale+1];
   var scale = Math.pow(2,mScale);
   var map=new Array(size[0]);
@@ -58,7 +128,7 @@ function initMap(mSize,mScale,mVariance) {
   //Diamond square algorithm go!
   for(i=0;i<map.length;i+=scale) {
     for(j=0;j<map[0].length;j+=scale) {
-      if(i<=scale||j<=scale){
+      if(i<=scale||j<=scale&&water){
         x=i;
         y=j;
         while(x<0){
