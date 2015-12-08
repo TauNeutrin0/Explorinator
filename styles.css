@@ -1,40 +1,43 @@
-@CHARSET "UTF-8";
+@charset "UTF-8";
+
 body {
-  margin:0px;
-  padding-bottom:30px;
-  padding-left:5px;
-  padding-right:5px;
-  font-family:monospace;
+  margin: 0;
+  padding-bottom: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-family: monospace;
 }
 
 #header {
-  position:fixed;
-  left:0px;
-  width:100%;
-  height:50px;
-  font-size:35px;
-  line-height:40px;
-  background:#555555;
-  font-family:"Arial Black", Gadget, sans-serif;
-  text-align:center;
-  box-shadow:0px 0px 20px #888888;
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  font-size: 35px;
+  line-height: 40px;
+  color: #ffffff;
+  background: #555555;
+  font-family: "Arial Black", Gadget, sans-serif;
+  text-align: center;
+  box-shadow: 0 0 20px #888888;
+  text-shadow: 0 0 5px #c0c0c0;
 }
 
 #inputdiv {
-  background:black;
-  position:fixed;
-  left:0px;
-  bottom:0px;
-  height:30px;
-  line-height:30px;
-  width:100%;
-  font-family:monospace;
+  background: black;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+  font-family: monospace;
   color: white;
 }
 
 #inputdiv input[type='text'] {
-  width:100%;
-  font-family:monospace;
+  width: 100%;
+  font-family: monospace;
   color: white;
   background: black;
   border: 0;
@@ -43,5 +46,5 @@ body {
 #inputdiv #inputwrapper {
   display: block;
   overflow: hidden;
-  padding-right:10px;
+  padding-right: 10px;
 }

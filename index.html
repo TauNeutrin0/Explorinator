@@ -8,9 +8,7 @@
   <script src="game.js"></script>
 </head>
 <body onload="init()">
-  <div id="header">
-    Explore!
-  </div>
+  <div id="header">Explore!</div>
   <div id="inputdiv">
     <span style="float:left">>&nbsp;</span><span id="inputwrapper"><input type="text" onkeydown="if (event.keyCode == 13&&this.value!=''){document.body.appendChild(document.createTextNode('> '+this.value));document.body.appendChild(document.createElement('br'));submitText(this.value);window.scrollTo(0,document.body.scrollHeight);this.value='';}"/></span>
   </div>
