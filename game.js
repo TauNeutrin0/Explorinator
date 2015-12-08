@@ -1,7 +1,7 @@
 var map;
 var mapSize = [360,360];
 var mapScale = 3;//scale of features will be 2^mapscale
-var mapVariance = 0.3;
+var mapVariance = 0.4;
 var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
 
 
@@ -66,12 +66,10 @@ function init() {
       } else {
         mapBiome[i][j] = 4;
       }
-      
     }
   }
-  writeMapShaded(mapHeight);
   NL();
-  writeMapBiome(mapBiome);
+  writeMapBiome(mapBiome,mapHeight);
   NL();
 }
 
@@ -86,31 +84,30 @@ function writeMapShaded(m) {
   NL();
 }
 
-function writeMapBiome(m) {
+function writeMapBiome(m,hM) {
   NL();
   for(i=0;i<m.length;i++) {
     for(j=0;j<m[0].length;j++) {
       if(m[i][j]==0){
         writeTxtSty("\u2588\u2588","Blue",true);
       } else if (m[i][j]==1) {
-        writeTxtSty("\u2588\u2588","#99ff66",true);
+        writeTxtSty("\u2588\u2588","hsl(100, 100%, "+(70+hM[i][j]*20)+"%)",true);
       } else if (m[i][j]==2) {
-        writeTxtSty("\u2588\u2588","#006600",true);
+        writeTxtSty("\u2588\u2588","hsl(120, 100%, "+(20+hM[i][j]*10)+"%)",true);
       } else if (m[i][j]==3) {
-        writeTxtSty("\u2588\u2588","Yellow",true);
+        writeTxtSty("\u2588\u2588","hsl(60, 100%, "+(60+hM[i][j]*20)+"%)",true);
       } else if (m[i][j]==4) {
-        writeTxtSty("\u2588\u2588","Gray",true);
+        writeTxtSty("\u2588\u2588","hsl(0, 0%, "+(50-hM[i][j]*20)+"%)",true);
       } else if (m[i][j]==5) {
-        writeTxtSty("\u2588\u2588","Orange",true);
+        writeTxtSty("\u2588\u2588","hsl(40, 100%, "+(70+hM[i][j]*20)+"%)",true);
       } else if (m[i][j]==6) {
-        writeTxtSty("\u2588\u2588","#33cccc",true);
+        writeTxtSty("\u2588\u2588","hsl(180, 60%, "+(50+hM[i][j]*20)+"%)",true);
         alert(6);
       } else {
         if(i==100){
           alert(i+" "+j+" "+m[i][j]);
         }
       }
-      //writeTxtSty("\u2588\u2588","#"+Math.round((m[i][j]+1.2)*255/2.4).toString(16)+Math.round((m[i][j]+1.2)*255/2.4).toString(16)+Math.round((m[i][j]+1.2)*255/2.4).toString(16),true);
     }
     NL();
   }
@@ -127,8 +124,8 @@ function initMap(mSize,mScale,mVariance,water) {
   var variance = mapVariance;
   //Diamond square algorithm go!
   for(i=0;i<map.length;i+=scale) {
-    for(j=0;j<map[0].length;j+=scale) {
-      if(i<=scale||j<=scale&&water){
+    for(j=0;j<map[i].length;j+=scale) {
+      if((i<=scale||j<=scale||i>=map.length-scale||j>=map[i].length-scale)&&water){
         x=i;
         y=j;
         while(x<0){
