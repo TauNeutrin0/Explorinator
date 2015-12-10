@@ -3,6 +3,8 @@ var mapSize = [360,360];
 var mapScale = 3;//scale of features will be 2^mapscale
 var mapVariance = 0.4;
 var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
+var plyPos
+
 
 
 function writeTxtSty(text,color,bold) {
@@ -22,9 +24,22 @@ function NL() {
 }
 
 function submitText(text) {
-  writeTxtSty("You said: '"+text+"'!","blue",true);
-  NL();
-  NL();
+  text = text.toLowerCase();
+  if(text == "code"){
+    var e = document.createElement('a');
+    e.innerHTML = "Explorinator on github";
+    e.href = "https://github.com/TauNeutrin0/Explorinator/tree/gh-pages";
+    document.body.appendChild(e);
+  }else if(text.slice(0, 4) == "walk"){
+    writeTxtSty("You walk forwards and derpily trip over");
+    NL();
+    NL();
+  }else{
+    writeTxtSty("You said: '"+text+"'!","blue",true);
+    NL();
+    NL();
+    
+  }
 }
 
 function init() {
