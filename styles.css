@@ -42,6 +42,7 @@ body {
 #inputdiv input[type='text'] {
   width: 100%;
   font-family: monospace;
+  font-size: inherit;
   color: white;
   background: black;
   border: 0;
