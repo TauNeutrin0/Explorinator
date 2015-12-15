@@ -5,22 +5,24 @@ var mapVariance = 0.4;
 //var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
 //var plyPos;
 
-
-
 function writeTxtSty(text,color,bold) {
   var e = document.createElement('span');
   e.innerHTML = text;
   e.style.color = color;
   if(bold){e.style["font-weight"] = "bold";}
-  document.body.appendChild(e);
+  document.body.lastElementChild.appendChild(e);
 }
 
 function writeTxt(text) {
-  document.body.appendChild(document.createTextNode(text));
+  document.body.lastElementChild.appendChild(document.createTextNode(text));
 }
 
 function NL() {
-  document.body.appendChild(document.createElement('br'));
+  //document.body.appendChild(document.createElement('br'));
+  var lastChild = document.body.lastElementChild;
+  if (lastChild && lastChild.children.length == 0)
+    lastChild.appendChild(document.createElement('br'));
+  document.body.appendChild(document.createElement('div'));
 }
 
 function submitText(text) {
@@ -43,6 +45,7 @@ function submitText(text) {
 }
 
 function init() {
+  NL();
   writeTxt("You wake up lying on the floor. Where are you? I guess you'd better find out.");
   NL();
   var mapHeight = initMap(mapSize,mapScale,mapVariance,true);
