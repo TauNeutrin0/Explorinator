@@ -21,7 +21,7 @@ function writeTxt(text) {
 function NL() {
   //document.body.appendChild(document.createElement('br'));
   var lastChild = document.body.lastElementChild;
-  if (lastChild && lastChild.children.length == 0)
+  if (lastChild && lastChild.children.length === 0)
     lastChild.appendChild(document.createElement('br'));
   document.body.appendChild(document.createElement('div'));
 }
@@ -36,16 +36,25 @@ function submitText(text) {
     NL();
     NL();
   }else if(text.slice(0, 4) === "walk"){
-  	if(text.slice(5,5)==="north"){
+  	if(text.slice(4,10)===" north"||text.slice(4,6)===" n"){
+  		plyPos[0]--;
+        writeTxt("You walk north.");
+  	} else if(text.slice(4,10)===" south"||text.slice(4,6)===" s"){
   		plyPos[0]++;
-  	}else{
-       writeTxtSty("You walk forwards and derpily trip over.");
+        writeTxt("You walk south.");
+  	} else if(text.slice(4,9)===" east"||text.slice(4,6)===" e"){
+  		plyPos[1]++;
+        writeTxt("You walk east.");
+  	} else if(text.slice(4,9)===" west"||text.slice(4,6)===" w"){
+  		plyPos[1]--;
+        writeTxt("You walk west.");
+  	} else {
+       writeTxt("You walk forwards and derpily trip over.");
     }
     NL();
-    NL();
   }else if(text.slice(0, 5) === "scout"){
-    //writeTxtSty("You look around you, but unfortunately you don't know how to look properly as the code has not been written yet.");
-    printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0]),maps[0],maps[2]);
+    writeTxtSty("You look around you, and you see:");
+    printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0]),maps[0],maps[2],true);
     NL();
     NL();
   }else{
@@ -72,17 +81,18 @@ function init() {
   plyPos=[Math.round(mapHeight.length / 2),Math.round(mapHeight[0].length / 2)];
   //plyPos=[50,50];
   //Take a break! http://xkcd.com/kite/kite_trick.jpg
-  printVisMap(plyPos,15,checkVisibility(plyPos,15,mapHeight),mapHeight,mapBiome);
+  printVisMap(plyPos,15,checkVisibility(plyPos,15,mapHeight),mapHeight,mapBiome,false);
+  printVisMap(plyPos,15,checkVisibility(plyPos,15,mapHeight),mapHeight,mapBiome,true);
   NL();
 }
 
-function printVisMap(pos,vis,vM,hM,bM) {
-	var pM = new Array(vis*2);
+function printVisMap(pos,vis,vM,hM,bM,mask) {
+	var pM = new Array(vis*2-1);
 	var i,j;
 	for(i=0;i<2*vis-1;i++){
 		pM[i] = new Array(vis*2-1);
 		for(j=0;j<2*vis-1;j++){
-			if(vM[i+pos[0]-vis+1][j+pos[1]-vis+1]===1){
+			if(vM[i+pos[0]-vis+1][j+pos[1]-vis+1]===1||!mask){
 				pM[i][j] = [hM[i+pos[0]-vis+1][j+pos[1]-vis+1],bM[i+pos[0]-vis+1][j+pos[1]-vis+1]];
 			} else {
 				pM[i][j] = [-1,-1];
@@ -93,33 +103,38 @@ function printVisMap(pos,vis,vM,hM,bM) {
   NL();
   for(i=0;i<pM.length;i++) {
     for(j=0;j<pM[i].length;j++) {
+      var chars = "\u2588\u2588";
+      if(i===vis&&j===vis){
+      	writeTxtSty("X","Black",true);
+      	chars="\u2588";
+      }
+    	
       if(pM[i][j][1]===-1){
-        writeTxtSty("\u2588\u2588","Black",true);
+        writeTxtSty(chars,"Black",true);
       } else if(pM[i][j][1]===0){
-        writeTxtSty("\u2588\u2588","Blue",true);
+        writeTxtSty(chars,"Blue",true);
       } else if (pM[i][j][1]===1) {
-        writeTxtSty("\u2588\u2588","hsl(100, 100%, "+(70+pM[i][j][0]*20)+"%)",true);
+        writeTxtSty(chars,"hsl(100, 100%, "+(70+pM[i][j][0]*20)+"%)",true);
       } else if (pM[i][j][1]===2) {
-        writeTxtSty("\u2588\u2588","hsl(120, 100%, "+(20+pM[i][j][0]*10)+"%)",true);
+        writeTxtSty(chars,"hsl(120, 100%, "+(20+pM[i][j][0]*10)+"%)",true);
       } else if (pM[i][j][1]===3) {
-        writeTxtSty("\u2588\u2588","hsl(60, 100%, "+(60+pM[i][j][0]*20)+"%)",true);
+        writeTxtSty(chars,"hsl(60, 100%, "+(60+pM[i][j][0]*20)+"%)",true);
       } else if (pM[i][j][1]===4) {
-        writeTxtSty("\u2588\u2588","hsl(0, 0%, "+(50-pM[i][j][0]*20)+"%)",true);
+        writeTxtSty(chars,"hsl(0, 0%, "+(50-pM[i][j][0]*20)+"%)",true);
       } else if (pM[i][j][1]===5) {
-        writeTxtSty("\u2588\u2588","hsl(40, 100%, "+(70+pM[i][j][0]*20)+"%)",true);
+        writeTxtSty(chars,"hsl(40, 100%, "+(70+pM[i][j][0]*20)+"%)",true);
       } else if (pM[i][j][1]===6) {
-        writeTxtSty("\u2588\u2588","hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)",true);
+        writeTxtSty(chars,"hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)",true);
       }
     }
     NL();
   }
-  NL();
 }
 
 function checkVisibility(pos,vis,hM) {
 	var mapVis = JSON.parse(JSON.stringify(hM));
 	var mapGrad = JSON.parse(JSON.stringify(hM));
-	var posH = hM[pos[0],pos[1]];
+	var posH = hM[pos[0]][pos[1]]+0.15;
 	var i,j;
 	for(i=0;i<mapVis.length;i++){
 		for(j=0;j<mapVis[i].length;j++){
@@ -136,8 +151,8 @@ function checkVisibility(pos,vis,hM) {
 	}
 	for(i=pos[0]-vis;i<=pos[0]+vis;i++){
 	    for(j=pos[1]-vis;j<=pos[1]+vis;j++){
-		    if(mapVis===1){
-                mapGrad[i][j]=(hM[i][j]-posH)/Math.sqrt(Math.pow(i-pos[0])+Math.pow(j-pos[1]));
+		    if(mapVis[i][j]===1){
+                mapGrad[i][j]=(hM[i][j]-posH)/Math.sqrt(Math.pow(i-pos[0],2)+Math.pow(j-pos[1],2));
             }
         }
 	}
@@ -151,14 +166,18 @@ function checkVisibility(pos,vis,hM) {
 	    		if(i<pos[0]){
 		    		for(a=0;a<pos[0]-1-i;a++){
 		    			var y = Math.floor((a+0.5)*graddx+j+0.5);
-		    			if(hM[a+i][y]>hM[i][j]||hM[a+i+1][y]>hM[i][j]){
+		    			if(mapGrad[a+i][y]>mapGrad[i][j]||mapGrad[a+i+1][y]>mapGrad[i][j]){
 		    				visible=false;
 		    			}
+		    			/*if(i+8===pos[0]&&j-10===pos[1]){
+	    			        console.log("i:"+i+"; j:"+j+"; graddx:"+graddx+"; graddy:"+graddy+"; posHeight:"+posH+"; posgradient:"+mapGrad[i][j]+"; x:"+(a+i)+"; y:"+y+"; height:"+hM[a+i][y]+"; gradient:"+mapGrad[a+i][y]+"; visible:"+visible);
+	    			        console.log("i:"+i+"; j:"+j+"; graddx:"+graddx+"; graddy:"+graddy+"; posHeight:"+posH+"; posgradient:"+mapGrad[i][j]+"; x:"+(a+i+1)+"; y:"+y+"; height:"+hM[a+i+1][y]+"; gradient:"+mapGrad[a+i+1][y]+"; visible:"+visible);
+	    		        }*/
 		    		}
 	    		} else {
 			    	for(a=0;a<i-1-pos[0];a++){
 			    		var y = Math.floor((a+0.5)*graddx+pos[1]+0.5);
-			    		if(hM[a+pos[0]][y]>hM[i][j]||hM[a+pos[0]+1][y]>hM[i][j]){
+			    		if(mapGrad[a+pos[0]][y]>mapGrad[i][j]||mapGrad[a+pos[0]+1][y]>mapGrad[i][j]){
 			    			visible=false;
 			    		}
 			    	}
@@ -166,19 +185,19 @@ function checkVisibility(pos,vis,hM) {
 	    		if(j<pos[1]){
 		    		for(a=0;a<pos[1]-1-j;a++){
 		    			var x = Math.floor((a+0.5)*graddy+i+0.5);
-		    			if(hM[x][a+j]>hM[i][j]||hM[x][a+j+1]>hM[i][j]){
+		    			if(mapGrad[x][a+j]>mapGrad[i][j]||mapGrad[x][a+j+1]>mapGrad[i][j]){
 		    				visible=false;
 		    			}
 		    		}
 	    		} else {
 			    	for(a=0;a<j-1-pos[1];a++){
 			    		var x = Math.floor((a+0.5)*graddy+pos[0]+0.5);
-			    		if(hM[x][a+pos[1]]>hM[i][j]||hM[x][a+pos[1]+1]>hM[i][j]){
+			    		if(mapGrad[x][a+pos[1]]>mapGrad[i][j]||mapGrad[x][a+pos[1]+1]>mapGrad[i][j]){
 			    			visible=false;
 		    			}
 			    	}
 	    		}
-	    		if(visible){
+	    		if(!visible){
 	    			mapVis[i][j] = 0;
 	    		} else {
 	    			mapVis[i][j] = 1;
