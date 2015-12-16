@@ -5,6 +5,7 @@ var mapVariance = 0.4;
 //var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
 var maps;
 var plyPos;
+var godMode = true;
 
 function writeTxtSty(text,color,bold) {
   var e = document.createElement('span');
@@ -28,31 +29,60 @@ function NL() {
 
 function submitText(text) {
   text = text.toLowerCase();
-  if(text === "code"){
+  var spltTxt = text.split(" ");
+  if(spltTxt[0] === "code"){
     var e = document.createElement('a');
     e.innerHTML = "Explorinator on github";
     e.href = "https://github.com/TauNeutrin0/Explorinator/tree/gh-pages";
     document.body.appendChild(e);
     NL();
     NL();
-  }else if(text.slice(0, 4) === "walk"){
-  	if(text.slice(4,10)===" north"||text.slice(4,6)===" n"){
-  		plyPos[0]--;
-        writeTxt("You walk north.");
-  	} else if(text.slice(4,10)===" south"||text.slice(4,6)===" s"){
-  		plyPos[0]++;
-        writeTxt("You walk south.");
-  	} else if(text.slice(4,9)===" east"||text.slice(4,6)===" e"){
-  		plyPos[1]++;
-        writeTxt("You walk east.");
-  	} else if(text.slice(4,9)===" west"||text.slice(4,6)===" w"){
-  		plyPos[1]--;
-        writeTxt("You walk west.");
+  }else if(spltTxt[0] === "walk"){
+  	if(spltTxt[1]==="north"||spltTxt[1]==="n"){
+  		var arg2 = spltTxt[2];
+  		if(!isNaN(+arg2)){
+  			arg2=Math.abs(Math.round(arg2));
+  		    plyPos[0]-=arg2;
+            writeTxt("You walk north "+arg2+"km.");
+  		} else {
+  			plyPos[0]--;
+            writeTxt("You walk north.");
+  		}
+  	} else if(spltTxt[1]==="south"||spltTxt[1]==="s"){
+  		var arg2 = spltTxt[2];
+  		if(!isNaN(+arg2)){
+  			arg2=Math.abs(Math.round(arg2));
+  		    plyPos[0]+=arg2;
+            writeTxt("You walk south "+arg2+"km.");
+  		} else {
+  			plyPos[0]++;
+            writeTxt("You walk south.");
+  		}
+  	} else if(spltTxt[1]==="east"||spltTxt[1]==="e"){
+  		var arg2 = spltTxt[2];
+  		if(!isNaN(+arg2)){
+  			arg2=Math.abs(Math.round(arg2));
+  		    plyPos[1]+=arg2;
+            writeTxt("You walk east "+arg2+"km.");
+  		} else {
+  			plyPos[1]++;
+        	writeTxt("You walk east.");
+  		}
+  	} else if(spltTxt[1]===" west"||spltTxt[1]==="w"){
+  		var arg2 = spltTxt[2];
+  		if(!isNaN(+arg2)){
+  			arg2=Math.abs(Math.round(arg2));
+  		    plyPos[1]-=arg2;
+            writeTxt("You walk west "+arg2+"km.");
+  		} else {
+  			plyPos[1]--;
+            writeTxt("You walk west.");
+  		}
   	} else {
        writeTxt("You walk forwards and derpily trip over.");
     }
     NL();
-  }else if(text.slice(0, 5) === "scout"){
+  }else if(spltTxt[0] === "scout"){
     writeTxtSty("You look around you, and you see:");
     printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0]),maps[0],maps[2],true);
     NL();
