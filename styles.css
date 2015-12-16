@@ -16,16 +16,41 @@ body {
   font-size: 35px;
   line-height: 40px;
   color: #ffffff;
-  background: #555555;
+  background-color: #777777;
   font-family: "Arial Black", Gadget, sans-serif;
   text-align: center;
   box-shadow: 0 0 20px #888888;
   text-shadow: 0 0 5px #c0c0c0;
-  background: -webkit-radial-gradient(circle,#777777, #333333); /* Safari 5.1 to 6.0 */
-  background: -o-radial-gradient(circle,#777777, #333333); /* For Opera 11.6 to 12.0 */
-  background: -moz-radial-gradient(circle,#777777, #333333); /* For Firefox 3.6 to 15 */
-  background: radial-gradient(circle,#777777, #333333); /* Standard syntax */
+  background-image: -webkit-radial-gradient(circle,rgba(0,0,0,0), #333333); /* Safari 5.1 to 6.0 */
+  background-image: -o-radial-gradient(circle,rgba(0,0,0,0), #333333); /* For Opera 11.6 to 12.0 */
+  background-image: -moz-radial-gradient(circle,rgba(0,0,0,0), #333333); /* For Firefox 3.6 to 15 */
+  background-image: radial-gradient(circle,rgba(0,0,0,0), #333333); /* Standard syntax */
+  transition: background-color 2s;
+  animation-name: pulse;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
 }
+
+
+@keyframes pulse {
+  0%   {background-color: #777777;}
+  50%  {background-color: #909090;}
+  100% {background-color: #777777;}
+}
+
+/*#header:hover {
+  animation-name: ofc;
+  animation-duration: 0.3s;
+  animation-iteration-count: infinite;
+  
+}
+@keyframes ofc {
+  0%   {background-color: #33D9C8;}
+  25%  {background-color: #FF62FD;}
+  50%  {background-color: #5433D9;}
+  75%  {background-color: #3DAEA5;}
+  100% {background-color: #FF0000;}
+}*/
 
 #inputdiv {
   background: black;

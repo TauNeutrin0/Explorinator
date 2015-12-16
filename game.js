@@ -3,6 +3,7 @@ var mapSize = [360,360];
 var mapScale = 3;//scale of features will be 2^mapscale
 var mapVariance = 0.4;
 //var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
+var maps;
 var plyPos;
 
 function writeTxtSty(text,color,bold) {
@@ -34,13 +35,17 @@ function submitText(text) {
     document.body.appendChild(e);
     NL();
     NL();
-  }else if(text.slice(0, 5) === "walk "){
-    writeTxtSty("You walk forwards and derpily trip over.");
+  }else if(text.slice(0, 4) === "walk"){
+  	if(text.slice(5,5)==="north"){
+  		plyPos[0]++;
+  	}else{
+       writeTxtSty("You walk forwards and derpily trip over.");
+    }
     NL();
     NL();
-  }else if(text.slice(0, 6) === "scout "){
-    writeTxtSty("You look around you, but unfortunately you don't know how to look properly as the code has not been written yet.");
-    //printVisMap(plyPos,10,checkVisibility(plyPos,10,mapHeight),mapHeight,mapBiome);
+  }else if(text.slice(0, 5) === "scout"){
+    //writeTxtSty("You look around you, but unfortunately you don't know how to look properly as the code has not been written yet.");
+    printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0]),maps[0],maps[2]);
     NL();
     NL();
   }else{
@@ -58,22 +63,27 @@ function init() {
   var mapHeight = initMap(mapSize,mapScale,mapVariance,true);
   var mapHumidity = initMap(mapSize,mapScale,mapVariance,false);
   var mapBiome = genMapBiome(mapHeight,mapHumidity);
+  maps= new Array(3);
+  maps[0]=mapHeight;
+  maps[1]=mapHumidity;
+  maps[2]=mapBiome;
   NL();
-  writeMapBiome(mapBiome,mapHeight);
+  //writeMapBiome(mapBiome,mapHeight);
   plyPos=[Math.round(mapHeight.length / 2),Math.round(mapHeight[0].length / 2)];
+  //plyPos=[50,50];
   //Take a break! http://xkcd.com/kite/kite_trick.jpg
-  printVisMap(plyPos,10,checkVisibility(plyPos,10,mapHeight),mapHeight,mapBiome);
+  printVisMap(plyPos,15,checkVisibility(plyPos,15,mapHeight),mapHeight,mapBiome);
   NL();
 }
 
 function printVisMap(pos,vis,vM,hM,bM) {
 	var pM = new Array(vis*2);
 	var i,j;
-	for(i=0;i<2*vis;i++){
-		pM[i] = new Array(vis*2);
-		for(j=0;j<2*vis;j++){
-			if(vM[i][j]===1){
-				pM[i][j] = [hM,bM];
+	for(i=0;i<2*vis-1;i++){
+		pM[i] = new Array(vis*2-1);
+		for(j=0;j<2*vis-1;j++){
+			if(vM[i+pos[0]-vis+1][j+pos[1]-vis+1]===1){
+				pM[i][j] = [hM[i+pos[0]-vis+1][j+pos[1]-vis+1],bM[i+pos[0]-vis+1][j+pos[1]-vis+1]];
 			} else {
 				pM[i][j] = [-1,-1];
 			}
@@ -81,7 +91,6 @@ function printVisMap(pos,vis,vM,hM,bM) {
 	}
 	
   NL();
-  var i,j;
   for(i=0;i<pM.length;i++) {
     for(j=0;j<pM[i].length;j++) {
       if(pM[i][j][1]===-1){
@@ -134,9 +143,9 @@ function checkVisibility(pos,vis,hM) {
 	}
 	for(i=pos[0]-vis;i<=pos[0]+vis;i++){
 	    for(j=pos[1]-vis;j<=pos[1]+vis;j++){
-	    	if(mapVis===1){
-	    		var graddx = (j-pos[1])/(i-pos[0]); //Essentially gradient from (i,j) to pos
-	    		var graddy = (i-pos[0])/(j-pos[1]);
+	    	if(mapVis[i][j]===1){
+	    		var graddx = (j-pos[1]) / (i-pos[0]); //Essentially gradient from (i,j) to pos
+	    		var graddy = (i-pos[0]) / (j-pos[1]);
 	    		var a,b;
 	    		var visible = true;
 	    		if(i<pos[0]){
@@ -169,8 +178,10 @@ function checkVisibility(pos,vis,hM) {
 		    			}
 			    	}
 	    		}
-	    		if(!visible){
+	    		if(visible){
 	    			mapVis[i][j] = 0;
+	    		} else {
+	    			mapVis[i][j] = 1;
 	    		}
 
 	    	}
@@ -184,7 +195,7 @@ function writeMapShaded(m) {
   var i,j;
   for(i=0;i<m.length;i++) {
     for(j=0;j<m[0].length;j++) {
-      writeTxtSty("\u2588\u2588","#"+Math.round((m[i][j]+1.2)*255/2.4).toString(16)+Math.round((m[i][j]+1.2)*255/2.4).toString(16)+Math.round((m[i][j]+1.2)*255/2.4).toString(16),true);
+      writeTxtSty("\u2588\u2588","#"+Math.round((m[i][j]+1.2)*255 / 2.4).toString(16)+Math.round((m[i][j]+1.2)*255 / 2.4).toString(16)+Math.round((m[i][j]+1.2)*255 / 2.4).toString(16),true);
     }
     NL();
   }
