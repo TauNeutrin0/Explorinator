@@ -6,7 +6,7 @@ var mapVariance = 0.4;
 var maps;
 var canvasScale = 6;
 var plyPos;
-var godMode = true;
+var godMode = false;
 
 function writeTxtSty(text,color,bold) {
   var e = document.createElement('span');
@@ -109,7 +109,7 @@ function submitText(text) {
     printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0],maps[2]),maps[0],maps[2],true);
     NL();
     NL();
-  }else if(spltTxt[0] === "!map"){
+  }else if(spltTxt[0] === "!map"&&godMode){
     writeTxtSty("You use the awesome power of the devs, and the entire world is revealed:");
     writeMapBiome(maps[2],maps[0],plyPos);
     NL();
