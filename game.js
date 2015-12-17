@@ -4,7 +4,7 @@ var mapScale = 3;//scale of features will be 2^mapscale
 var mapVariance = 0.4;
 //var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
 var maps;
-var canvasScale = 5;
+var canvasScale = 6;
 var plyPos;
 var godMode = true;
 
@@ -84,7 +84,7 @@ function submitText(text) {
   		} else {
   			writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
   		}
-  	} else if(spltTxt[1]===" west"||spltTxt[1]==="w"){
+  	} else if(spltTxt[1]==="west"||spltTxt[1]==="w"){
   		var dist = spltTxt[2];
   		if(!isNaN(+dist)){
   			dist=Math.abs(Math.round(dist));
@@ -107,6 +107,11 @@ function submitText(text) {
   }else if(spltTxt[0] === "scout"){
     writeTxtSty("You look around you, and you see:");
     printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0],maps[2]),maps[0],maps[2],true);
+    NL();
+    NL();
+  }else if(spltTxt[0] === "!map"){
+    writeTxtSty("You use the awesome power of the devs, and the entire world is revealed:");
+    writeMapBiome(maps[2],maps[0],plyPos);
     NL();
     NL();
   }else{
@@ -195,7 +200,9 @@ function printVisMap(pos,vis,vM,hM,bM,mask) {
   document.body.lastElementChild.appendChild(e);
 }
 
-function checkVisibility(pos,vis,hM,bM) {
+function checkVisibility(pPos,vis,hM,bM) {
+	//Note: alg currenntly appears to calculate vis from pos[0]-1 and pos[1]-1.
+	var pos = [pPos[0]+1,pPos[1]+1];
 	var mapVis = JSON.parse(JSON.stringify(hM));
 	var mapGrad = JSON.parse(JSON.stringify(hM));
 	var posH;
@@ -301,29 +308,45 @@ function writeMapShaded(m) {
   NL();
 }
 
-function writeMapBiome(m,hM) {
-  NL();
+function writeMapBiome(m,hM,pos) {
   var i,j;
+  NL();
+  var e = document.createElement('canvas');
+  e.width = canvasScale*m.length;
+  e.height = canvasScale*m[0].length;
+  var ctx = e.getContext("2d");
   for(i=0;i<m.length;i++) {
-    for(j=0;j<m[0].length;j++) {
-      if(m[i][j]===0){
-        writeTxtSty("\u2588\u2588","Blue",true);
-      } else if (m[i][j]===1) {
-        writeTxtSty("\u2588\u2588","hsl(100, 100%, "+(70+hM[i][j]*20)+"%)",true);
-      } else if (m[i][j]===2) {
-        writeTxtSty("\u2588\u2588","hsl(120, 100%, "+(20+hM[i][j]*10)+"%)",true);
-      } else if (m[i][j]===3) {
-        writeTxtSty("\u2588\u2588","hsl(60, 100%, "+(60+hM[i][j]*20)+"%)",true);
-      } else if (m[i][j]===4) {
-        writeTxtSty("\u2588\u2588","hsl(0, 0%, "+(50-hM[i][j]*20)+"%)",true);
-      } else if (m[i][j]===5) {
-        writeTxtSty("\u2588\u2588","hsl(40, 100%, "+(70+hM[i][j]*20)+"%)",true);
-      } else if (m[i][j]===6) {
-        writeTxtSty("\u2588\u2588","hsl(180, 60%, "+(50+hM[i][j]*20)+"%)",true);
+      for(j=0;j<m[i].length;j++) {
+          if(m[i][j]===-1){
+	        ctx.fillStyle = "black";
+	      } else if(m[i][j]===0){
+	        ctx.fillStyle = "blue";
+	      } else if (m[i][j]===1) {
+	        ctx.fillStyle = "hsl(100, 100%, "+(70+hM[i][j]*20)+"%)";
+	      } else if (m[i][j]===2) {
+	        ctx.fillStyle = "hsl(120, 100%, "+(20+hM[i][j]*10)+"%)";
+	      } else if (m[i][j]===3) {
+	        ctx.fillStyle = "hsl(60, 100%, "+(60+hM[i][j]*20)+"%)";
+	      } else if (m[i][j]===4) {
+	        ctx.fillStyle = "hsl(0, 0%, "+(50-hM[i][j]*20)+"%)";
+	      } else if (m[i][j]===5) {
+	        ctx.fillStyle = "hsl(40, 100%, "+(70+hM[i][j]*20)+"%)";
+	      } else if (m[i][j]===6) {
+	        ctx.fillStyle = "hsl(180, 60%, "+(50+hM[i][j]*20)+"%)";
+	      }
+	      ctx.fillRect(j*canvasScale,i*canvasScale,canvasScale,canvasScale);
+	      if(i===pos[0]&&j===pos[1]){
+	      	ctx.fillStyle = "#FF0000";
+	      	ctx.moveTo(j*canvasScale,i*canvasScale);
+			ctx.lineTo((j+1)*canvasScale-1,(i+1)*canvasScale-1);
+			ctx.stroke();
+	      	ctx.moveTo((j+1)*canvasScale-1,i*canvasScale);
+			ctx.lineTo(j*canvasScale,(i+1)*canvasScale-1);
+			ctx.stroke();
+	      }
       }
-    }
-    NL();
   }
+  document.body.lastElementChild.appendChild(e);
   NL();
 }
 
