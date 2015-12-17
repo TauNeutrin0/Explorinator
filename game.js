@@ -131,34 +131,42 @@ function printVisMap(pos,vis,vM,hM,bM,mask) {
 	}
 	
   NL();
+  var e = document.createElement('canvas');
+  e.width = 4*pM.length;
+  e.height = 4*pM[0].length;
+  var ctx = e.getContext("2d");
   for(i=0;i<pM.length;i++) {
-    for(j=0;j<pM[i].length;j++) {
-      var chars = "\u2588\u2588";
-      if(i===vis&&j===vis){
-      	writeTxtSty("X","Black",true);
-      	chars="\u2588";
+      for(j=0;j<pM[i].length;j++) {
+          if(pM[i][j][1]===-1){
+	        ctx.fillStyle = "black";
+	      } else if(pM[i][j][1]===0){
+	        ctx.fillStyle = "blue";
+	      } else if (pM[i][j][1]===1) {
+	        ctx.fillStyle = "hsl(100, 100%, "+(70+pM[i][j][0]*20)+"%)";
+	      } else if (pM[i][j][1]===2) {
+	        ctx.fillStyle = "hsl(120, 100%, "+(20+pM[i][j][0]*10)+"%)";
+	      } else if (pM[i][j][1]===3) {
+	        ctx.fillStyle = "hsl(60, 100%, "+(60+pM[i][j][0]*20)+"%)";
+	      } else if (pM[i][j][1]===4) {
+	        ctx.fillStyle = "hsl(0, 0%, "+(50-pM[i][j][0]*20)+"%)";
+	      } else if (pM[i][j][1]===5) {
+	        ctx.fillStyle = "hsl(40, 100%, "+(70+pM[i][j][0]*20)+"%)";
+	      } else if (pM[i][j][1]===6) {
+	        ctx.fillStyle = "hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)";
+	      }
+	      ctx.fillRect(j*4,i*4,4,4);
+	      if(i===vis&&j===vis){
+	      	ctx.fillStyle = "#FF0000";
+	      	ctx.moveTo(j*4,i*4);
+			ctx.lineTo(j*4+3,i*4+3);
+			ctx.stroke();
+	      	ctx.moveTo(j*4+3,i*4);
+			ctx.lineTo(j*4,i*4+3);
+			ctx.stroke();
+	      }
       }
-    	
-      if(pM[i][j][1]===-1){
-        writeTxtSty(chars,"Black",true);
-      } else if(pM[i][j][1]===0){
-        writeTxtSty(chars,"Blue",true);
-      } else if (pM[i][j][1]===1) {
-        writeTxtSty(chars,"hsl(100, 100%, "+(70+pM[i][j][0]*20)+"%)",true);
-      } else if (pM[i][j][1]===2) {
-        writeTxtSty(chars,"hsl(120, 100%, "+(20+pM[i][j][0]*10)+"%)",true);
-      } else if (pM[i][j][1]===3) {
-        writeTxtSty(chars,"hsl(60, 100%, "+(60+pM[i][j][0]*20)+"%)",true);
-      } else if (pM[i][j][1]===4) {
-        writeTxtSty(chars,"hsl(0, 0%, "+(50-pM[i][j][0]*20)+"%)",true);
-      } else if (pM[i][j][1]===5) {
-        writeTxtSty(chars,"hsl(40, 100%, "+(70+pM[i][j][0]*20)+"%)",true);
-      } else if (pM[i][j][1]===6) {
-        writeTxtSty(chars,"hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)",true);
-      }
-    }
-    NL();
   }
+  document.body.lastElementChild.appendChild(e);
 }
 
 function checkVisibility(pos,vis,hM) {
