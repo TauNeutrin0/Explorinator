@@ -39,69 +39,69 @@ function submitText(text) {
     NL();
     NL();
   }else if(spltTxt[0] === "walk"){
-  	if(spltTxt[1]==="north"||spltTxt[1]==="n"){
-  		var dist = spltTxt[2];
-  		if(!isNaN(+dist)){
-  			dist=Math.abs(Math.round(dist));
-            writeTxt("You walk north "+dist+"km");
-  		} else {
-  			dist=1;
-            writeTxt("You walk north");
-  		}
-  		if(plyPos[0]-dist>=0){
-  		    plyPos[0]-=dist;
-  		    writeTxt(".");
-  		} else {
-  			writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
-  		}
-  	} else if(spltTxt[1]==="south"||spltTxt[1]==="s"){
-  		var dist = spltTxt[2];
-  		if(!isNaN(+dist)){
-  			dist=Math.abs(Math.round(dist));
-            writeTxt("You walk south "+dist+"km");
-  		} else {
-  			dist=1;
-            writeTxt("You walk south");
-  		}
-  		if(plyPos[0]+dist<maps[0][0].length){
-  		    plyPos[0]+=dist;
-  		    writeTxt(".");
-  		} else {
-  			writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
-  		}
-  	} else if(spltTxt[1]==="east"||spltTxt[1]==="e"){
-  		var dist = spltTxt[2];
-  		if(!isNaN(+dist)){
-  			dist=Math.abs(Math.round(dist));
-            writeTxt("You walk east "+dist+"km");
-  		} else {
-  			dist=1;
-        	writeTxt("You walk east");
-  		}
-  		if(plyPos[1]+dist<maps[0].length){
-  		    plyPos[1]+=dist;
-  		    writeTxt(".");
-  		} else {
-  			writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
-  		}
-  	} else if(spltTxt[1]==="west"||spltTxt[1]==="w"){
-  		var dist = spltTxt[2];
-  		if(!isNaN(+dist)){
-  			dist=Math.abs(Math.round(dist));
-            writeTxt("You walk west "+dist+"km");
-  		} else {
-  			dist=1;
-  			plyPos[1]--;
-            writeTxt("You walk west");
-  		}
-  		if(plyPos[1]-dist>=0){
-  		    plyPos[1]-=dist;
-  		    writeTxt(".");
-  		} else {
-  			writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
-  		}
-  	} else {
-       writeTxt("You walk forwards and derpily trip over.");
+    if(spltTxt[1]==="north"||spltTxt[1]==="n"){
+      var dist = spltTxt[2];
+      if(!isNaN(+dist)){
+        dist=Math.abs(Math.round(dist));
+        writeTxt("You walk north "+dist+"km");
+      } else {
+        dist=1;
+        writeTxt("You walk north");
+      }
+      if(plyPos[0]-dist>=0){
+        plyPos[0]-=dist;
+        writeTxt(".");
+      } else {
+        writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
+      }
+    } else if(spltTxt[1]==="south"||spltTxt[1]==="s"){
+      var dist = spltTxt[2];
+      if(!isNaN(+dist)){
+        dist=Math.abs(Math.round(dist));
+        writeTxt("You walk south "+dist+"km");
+      } else {
+        dist=1;
+        writeTxt("You walk south");
+      }
+      if(plyPos[0]+dist<maps[0][0].length){
+        plyPos[0]+=dist;
+        writeTxt(".");
+      } else {
+        writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
+      }
+    } else if(spltTxt[1]==="east"||spltTxt[1]==="e"){
+      var dist = spltTxt[2];
+      if(!isNaN(+dist)){
+        dist=Math.abs(Math.round(dist));
+        writeTxt("You walk east "+dist+"km");
+      } else {
+        dist=1;
+        writeTxt("You walk east");
+      }
+      if(plyPos[1]+dist<maps[0].length){
+        plyPos[1]+=dist;
+        writeTxt(".");
+      } else {
+        writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
+      }
+    } else if(spltTxt[1]==="west"||spltTxt[1]==="w"){
+      var dist = spltTxt[2];
+      if(!isNaN(+dist)){
+        dist=Math.abs(Math.round(dist));
+        writeTxt("You walk west "+dist+"km");
+      } else {
+        dist=1;
+        plyPos[1]--;
+        writeTxt("You walk west");
+      }
+      if(plyPos[1]-dist>=0){
+        plyPos[1]-=dist;
+        writeTxt(".");
+      } else {
+        writeTxt(", but can't make it. There seems to be some sort of barrier blocking your way.");
+      }
+    } else {
+      writeTxt("You walk forwards and derpily trip over.");
     }
     NL();
   }else if(spltTxt[0] === "scout"){
@@ -118,7 +118,6 @@ function submitText(text) {
     writeTxtSty("You said: '"+text+"'!","blue",true);
     NL();
     NL();
-    
   }
 }
 
@@ -144,156 +143,152 @@ function init() {
 }
 
 function printVisMap(pos,vis,vM,hM,bM,mask) {
-	var pM = new Array(vis*2-1);
-	var i,j;
-	for(i=0;i<2*vis-1;i++){
-		pM[i] = new Array(vis*2-1);
-		for(j=0;j<2*vis-1;j++){
-			if(i+pos[0]-vis+1>=0&&j+pos[1]-vis+1>=0&&i+pos[0]-vis+1<vM.length&&j+pos[1]-vis+1<vM[0].length){
-				if(vM[i+pos[0]-vis+1][j+pos[1]-vis+1]===1||!mask){
-					pM[i][j] = [hM[i+pos[0]-vis+1][j+pos[1]-vis+1],bM[i+pos[0]-vis+1][j+pos[1]-vis+1]];
-				} else {
-					pM[i][j] = [-1,-1];
-				}
-			} else {
-				pM[i][j] = [-1,-1];
-			}
-		}
-	}
-	
+  var pM = new Array(vis*2-1);
+  var i,j;
+  for(i=0;i<2*vis-1;i++){
+    pM[i] = new Array(vis*2-1);
+    for(j=0;j<2*vis-1;j++){
+      if(i+pos[0]-vis+1>=0&&j+pos[1]-vis+1>=0&&i+pos[0]-vis+1<vM.length&&j+pos[1]-vis+1<vM[0].length){
+        if(vM[i+pos[0]-vis+1][j+pos[1]-vis+1]===1||!mask){
+          pM[i][j] = [hM[i+pos[0]-vis+1][j+pos[1]-vis+1],bM[i+pos[0]-vis+1][j+pos[1]-vis+1]];
+        } else {
+          pM[i][j] = [-1,-1];
+        }
+      } else {
+        pM[i][j] = [-1,-1];
+      }
+    }
+  }
+
   NL();
   var e = document.createElement('canvas');
   e.width = canvasScale*pM.length;
   e.height = canvasScale*pM[0].length;
   var ctx = e.getContext("2d");
   for(i=0;i<pM.length;i++) {
-      for(j=0;j<pM[i].length;j++) {
-          if(pM[i][j][1]===-1){
-	        ctx.fillStyle = "black";
-	      } else if(pM[i][j][1]===0){
-	        ctx.fillStyle = "blue";
-	      } else if (pM[i][j][1]===1) {
-	        ctx.fillStyle = "hsl(100, 100%, "+(70+pM[i][j][0]*20)+"%)";
-	      } else if (pM[i][j][1]===2) {
-	        ctx.fillStyle = "hsl(120, 100%, "+(20+pM[i][j][0]*10)+"%)";
-	      } else if (pM[i][j][1]===3) {
-	        ctx.fillStyle = "hsl(60, 100%, "+(60+pM[i][j][0]*20)+"%)";
-	      } else if (pM[i][j][1]===4) {
-	        ctx.fillStyle = "hsl(0, 0%, "+(50-pM[i][j][0]*20)+"%)";
-	      } else if (pM[i][j][1]===5) {
-	        ctx.fillStyle = "hsl(40, 100%, "+(70+pM[i][j][0]*20)+"%)";
-	      } else if (pM[i][j][1]===6) {
-	        ctx.fillStyle = "hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)";
-	      }
-	      ctx.fillRect(j*canvasScale,i*canvasScale,canvasScale,canvasScale);
-	      if(i===vis&&j===vis){
-	      	ctx.fillStyle = "#FF0000";
-	      	ctx.moveTo(j*canvasScale,i*canvasScale);
-			ctx.lineTo((j+1)*canvasScale-1,(i+1)*canvasScale-1);
-			ctx.stroke();
-	      	ctx.moveTo((j+1)*canvasScale-1,i*canvasScale);
-			ctx.lineTo(j*canvasScale,(i+1)*canvasScale-1);
-			ctx.stroke();
-	      }
+    for(j=0;j<pM[i].length;j++) {
+      if(pM[i][j][1]===-1){
+        ctx.fillStyle = "black";
+      } else if(pM[i][j][1]===0){
+        ctx.fillStyle = "blue";
+      } else if (pM[i][j][1]===1) {
+        ctx.fillStyle = "hsl(100, 100%, "+(70+pM[i][j][0]*20)+"%)";
+      } else if (pM[i][j][1]===2) {
+        ctx.fillStyle = "hsl(120, 100%, "+(20+pM[i][j][0]*10)+"%)";
+      } else if (pM[i][j][1]===3) {
+        ctx.fillStyle = "hsl(60, 100%, "+(60+pM[i][j][0]*20)+"%)";
+      } else if (pM[i][j][1]===4) {
+        ctx.fillStyle = "hsl(0, 0%, "+(50-pM[i][j][0]*20)+"%)";
+      } else if (pM[i][j][1]===5) {
+        ctx.fillStyle = "hsl(40, 100%, "+(70+pM[i][j][0]*20)+"%)";
+      } else if (pM[i][j][1]===6) {
+        ctx.fillStyle = "hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)";
       }
+      ctx.fillRect(j*canvasScale,i*canvasScale,canvasScale,canvasScale);
+      if(i===vis&&j===vis){
+        ctx.fillStyle = "#FF0000";
+        ctx.moveTo(j*canvasScale,i*canvasScale);
+        ctx.lineTo((j+1)*canvasScale-1,(i+1)*canvasScale-1);
+        ctx.stroke();
+        ctx.moveTo((j+1)*canvasScale-1,i*canvasScale);
+        ctx.lineTo(j*canvasScale,(i+1)*canvasScale-1);
+        ctx.stroke();
+      }
+    }
   }
   document.body.lastElementChild.appendChild(e);
 }
 
 function checkVisibility(pPos,vis,hM,bM) {
-	//Note: alg currenntly appears to calculate vis from pos[0]-1 and pos[1]-1.
-	var pos = [pPos[0]+1,pPos[1]+1];
-	var mapVis = JSON.parse(JSON.stringify(hM));
-	var mapGrad = JSON.parse(JSON.stringify(hM));
-	var posH;
-	if(bM[pos[0]][pos[1]]===0){
-		posH = -0.85;
-	} else {
-		posH = hM[pos[0]][pos[1]]+0.15;
-	}
-	var i,j;
-	for(i=0;i<mapVis.length;i++){
-		for(j=0;j<mapVis[i].length;j++){
-			if(pos[0]-vis<i&&pos[0]+vis>i&&pos[1]-vis<j&&pos[1]+vis>j){
-				if(Math.pow(pos[0]-i,2)+Math.pow(pos[1]-j,2)<=Math.pow(vis,2)){
-					mapVis[i][j] = 1;
-				} else {
-					mapVis[i][j] = 0;
-				}
-			} else {
-				mapVis[i][j] = 0;
-			}
-		}
-	}
-	for(i=pos[0]-vis;i<=pos[0]+vis;i++){
-	    for(j=pos[1]-vis;j<=pos[1]+vis;j++){
-	    	if(i>=0&&j>=0&&i<mapVis.length&&j<mapVis[0].length){
-			    if(mapVis[i][j]===1){
-			    	if(bM[i][j]===0){
-	                	mapGrad[i][j]=(-1-posH)/Math.sqrt(Math.pow(i-pos[0],2)+Math.pow(j-pos[1],2));
-	                } else {
-		                mapGrad[i][j]=(hM[i][j]-posH)/Math.sqrt(Math.pow(i-pos[0],2)+Math.pow(j-pos[1],2));
-	                }
-
-	            }
-	        }
-
+  //Note: alg currenntly appears to calculate vis from pos[0]-1 and pos[1]-1.
+  var pos = [pPos[0]+1,pPos[1]+1];
+  var mapVis = JSON.parse(JSON.stringify(hM));
+  var mapGrad = JSON.parse(JSON.stringify(hM));
+  var posH;
+  if(bM[pos[0]][pos[1]]===0){
+    posH = -0.85;
+  } else {
+    posH = hM[pos[0]][pos[1]]+0.15;
+  }
+  var i,j;
+  for(i=0;i<mapVis.length;i++){
+    for(j=0;j<mapVis[i].length;j++){
+      if(pos[0]-vis<i&&pos[0]+vis>i&&pos[1]-vis<j&&pos[1]+vis>j){
+        if(Math.pow(pos[0]-i,2)+Math.pow(pos[1]-j,2)<=Math.pow(vis,2)){
+          mapVis[i][j] = 1;
+        } else {
+          mapVis[i][j] = 0;
         }
-	}
-	for(i=pos[0]-vis;i<=pos[0]+vis;i++){
-	    for(j=pos[1]-vis;j<=pos[1]+vis;j++){
-	    	if(i>=0&&j>=0&&i<mapVis.length&&j<mapVis[0].length){
-		    	if(mapVis[i][j]===1){
-		    		var graddx = (j-pos[1]) / (i-pos[0]); //Essentially gradient from (i,j) to pos
-		    		var graddy = (i-pos[0]) / (j-pos[1]);
-		    		var a,b;
-		    		var visible = true;
-		    		if(i<pos[0]){
-			    		for(a=0;a<pos[0]-1-i;a++){
-			    			var y = Math.floor((a+0.5)*graddx+j+0.5);
-			    			if(mapGrad[a+i][y]>mapGrad[i][j]||mapGrad[a+i+1][y]>mapGrad[i][j]){
-			    				visible=false;
-			    			}
-			    			/*if(i+8===pos[0]&&j-10===pos[1]){
-		    			        console.log("i:"+i+"; j:"+j+"; graddx:"+graddx+"; graddy:"+graddy+"; posHeight:"+posH+"; posgradient:"+mapGrad[i][j]+"; x:"+(a+i)+"; y:"+y+"; height:"+hM[a+i][y]+"; gradient:"+mapGrad[a+i][y]+"; visible:"+visible);
-		    			        console.log("i:"+i+"; j:"+j+"; graddx:"+graddx+"; graddy:"+graddy+"; posHeight:"+posH+"; posgradient:"+mapGrad[i][j]+"; x:"+(a+i+1)+"; y:"+y+"; height:"+hM[a+i+1][y]+"; gradient:"+mapGrad[a+i+1][y]+"; visible:"+visible);
-		    		        }*/
-			    		}
-		    		} else {
-				    	for(a=0;a<i-1-pos[0];a++){
-				    		var y = Math.floor((a+0.5)*graddx+pos[1]+0.5);
-				    		if(mapGrad[a+pos[0]][y]>mapGrad[i][j]||mapGrad[a+pos[0]+1][y]>mapGrad[i][j]){
-				    			visible=false;
-				    		}
-				    	}
-		    		}
-		    		if(j<pos[1]){
-			    		for(a=0;a<pos[1]-1-j;a++){
-			    			var x = Math.floor((a+0.5)*graddy+i+0.5);
-			    			if(mapGrad[x][a+j]>mapGrad[i][j]||mapGrad[x][a+j+1]>mapGrad[i][j]){
-			    				visible=false;
-			    			}
-			    		}
-		    		} else {
-				    	for(a=0;a<j-1-pos[1];a++){
-				    		var x = Math.floor((a+0.5)*graddy+pos[0]+0.5);
-				    		if(mapGrad[x][a+pos[1]]>mapGrad[i][j]||mapGrad[x][a+pos[1]+1]>mapGrad[i][j]){
-				    			visible=false;
-			    			}
-				    	}
-		    		}
-		    		if(!visible){
-		    			mapVis[i][j] = 0;
-		    		} else {
-		    			mapVis[i][j] = 1;
-		    		}
-	
-		    	}
-	    	}
-
-    	}
-	}
-	return mapVis;
+      } else {
+        mapVis[i][j] = 0;
+      }
+    }
+  }
+  for(i=pos[0]-vis;i<=pos[0]+vis;i++){
+    for(j=pos[1]-vis;j<=pos[1]+vis;j++){
+      if(i>=0&&j>=0&&i<mapVis.length&&j<mapVis[0].length){
+        if(mapVis[i][j]===1){
+          if(bM[i][j]===0){
+            mapGrad[i][j]=(-1-posH)/Math.sqrt(Math.pow(i-pos[0],2)+Math.pow(j-pos[1],2));
+          } else {
+            mapGrad[i][j]=(hM[i][j]-posH)/Math.sqrt(Math.pow(i-pos[0],2)+Math.pow(j-pos[1],2));
+          }
+        }
+      }
+    }
+  }
+  for(i=pos[0]-vis;i<=pos[0]+vis;i++){
+    for(j=pos[1]-vis;j<=pos[1]+vis;j++){
+      if(i>=0&&j>=0&&i<mapVis.length&&j<mapVis[0].length){
+        if(mapVis[i][j]===1){
+          var graddx = (j-pos[1]) / (i-pos[0]); //Essentially gradient from (i,j) to pos
+          var graddy = (i-pos[0]) / (j-pos[1]);
+          var a,b;
+          var visible = true;
+          if(i<pos[0]){
+            for(a=0;a<pos[0]-1-i;a++){
+              var y = Math.floor((a+0.5)*graddx+j+0.5);
+              if(mapGrad[a+i][y]>mapGrad[i][j]||mapGrad[a+i+1][y]>mapGrad[i][j]){
+                visible=false;
+              }
+              /*if(i+8===pos[0]&&j-10===pos[1]){
+               *                     console.log("i:"+i+"; j:"+j+"; graddx:"+graddx+"; graddy:"+graddy+"; posHeight:"+posH+"; posgradient:"+mapGrad[i][j]+"; x:"+(a+i)+"; y:"+y+"; height:"+hM[a+i][y]+"; gradient:"+mapGrad[a+i][y]+"; visible:"+visible);
+               *                     console.log("i:"+i+"; j:"+j+"; graddx:"+graddx+"; graddy:"+graddy+"; posHeight:"+posH+"; posgradient:"+mapGrad[i][j]+"; x:"+(a+i+1)+"; y:"+y+"; height:"+hM[a+i+1][y]+"; gradient:"+mapGrad[a+i+1][y]+"; visible:"+visible);
+            }*/
+            }
+          } else {
+            for(a=0;a<i-1-pos[0];a++){
+              var y = Math.floor((a+0.5)*graddx+pos[1]+0.5);
+              if(mapGrad[a+pos[0]][y]>mapGrad[i][j]||mapGrad[a+pos[0]+1][y]>mapGrad[i][j]){
+                visible=false;
+              }
+            }
+          }
+          if(j<pos[1]){
+            for(a=0;a<pos[1]-1-j;a++){
+              var x = Math.floor((a+0.5)*graddy+i+0.5);
+              if(mapGrad[x][a+j]>mapGrad[i][j]||mapGrad[x][a+j+1]>mapGrad[i][j]){
+                visible=false;
+              }
+            }
+          } else {
+            for(a=0;a<j-1-pos[1];a++){
+              var x = Math.floor((a+0.5)*graddy+pos[0]+0.5);
+              if(mapGrad[x][a+pos[1]]>mapGrad[i][j]||mapGrad[x][a+pos[1]+1]>mapGrad[i][j]){
+                visible=false;
+              }
+            }
+          }
+          if(!visible){
+            mapVis[i][j] = 0;
+          } else {
+            mapVis[i][j] = 1;
+          }
+        }
+      }
+    }
+  }
+  return mapVis;
 }
 
 function writeMapShaded(m) {
@@ -316,35 +311,35 @@ function writeMapBiome(m,hM,pos) {
   e.height = canvasScale*m[0].length;
   var ctx = e.getContext("2d");
   for(i=0;i<m.length;i++) {
-      for(j=0;j<m[i].length;j++) {
-          if(m[i][j]===-1){
-	        ctx.fillStyle = "black";
-	      } else if(m[i][j]===0){
-	        ctx.fillStyle = "blue";
-	      } else if (m[i][j]===1) {
-	        ctx.fillStyle = "hsl(100, 100%, "+(70+hM[i][j]*20)+"%)";
-	      } else if (m[i][j]===2) {
-	        ctx.fillStyle = "hsl(120, 100%, "+(20+hM[i][j]*10)+"%)";
-	      } else if (m[i][j]===3) {
-	        ctx.fillStyle = "hsl(60, 100%, "+(60+hM[i][j]*20)+"%)";
-	      } else if (m[i][j]===4) {
-	        ctx.fillStyle = "hsl(0, 0%, "+(50-hM[i][j]*20)+"%)";
-	      } else if (m[i][j]===5) {
-	        ctx.fillStyle = "hsl(40, 100%, "+(70+hM[i][j]*20)+"%)";
-	      } else if (m[i][j]===6) {
-	        ctx.fillStyle = "hsl(180, 60%, "+(50+hM[i][j]*20)+"%)";
-	      }
-	      ctx.fillRect(j*canvasScale,i*canvasScale,canvasScale,canvasScale);
-	      if(i===pos[0]&&j===pos[1]){
-	      	ctx.fillStyle = "#FF0000";
-	      	ctx.moveTo(j*canvasScale,i*canvasScale);
-			ctx.lineTo((j+1)*canvasScale-1,(i+1)*canvasScale-1);
-			ctx.stroke();
-	      	ctx.moveTo((j+1)*canvasScale-1,i*canvasScale);
-			ctx.lineTo(j*canvasScale,(i+1)*canvasScale-1);
-			ctx.stroke();
-	      }
+    for(j=0;j<m[i].length;j++) {
+      if(m[i][j]===-1){
+        ctx.fillStyle = "black";
+      } else if(m[i][j]===0){
+        ctx.fillStyle = "blue";
+      } else if (m[i][j]===1) {
+        ctx.fillStyle = "hsl(100, 100%, "+(70+hM[i][j]*20)+"%)";
+      } else if (m[i][j]===2) {
+        ctx.fillStyle = "hsl(120, 100%, "+(20+hM[i][j]*10)+"%)";
+      } else if (m[i][j]===3) {
+        ctx.fillStyle = "hsl(60, 100%, "+(60+hM[i][j]*20)+"%)";
+      } else if (m[i][j]===4) {
+        ctx.fillStyle = "hsl(0, 0%, "+(50-hM[i][j]*20)+"%)";
+      } else if (m[i][j]===5) {
+        ctx.fillStyle = "hsl(40, 100%, "+(70+hM[i][j]*20)+"%)";
+      } else if (m[i][j]===6) {
+        ctx.fillStyle = "hsl(180, 60%, "+(50+hM[i][j]*20)+"%)";
       }
+      ctx.fillRect(j*canvasScale,i*canvasScale,canvasScale,canvasScale);
+      if(i===pos[0]&&j===pos[1]){
+        ctx.fillStyle = "#FF0000";
+        ctx.moveTo(j*canvasScale,i*canvasScale);
+        ctx.lineTo((j+1)*canvasScale-1,(i+1)*canvasScale-1);
+        ctx.stroke();
+        ctx.moveTo((j+1)*canvasScale-1,i*canvasScale);
+        ctx.lineTo(j*canvasScale,(i+1)*canvasScale-1);
+        ctx.stroke();
+      }
+    }
   }
   document.body.lastElementChild.appendChild(e);
   NL();
