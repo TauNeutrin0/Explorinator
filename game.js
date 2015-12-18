@@ -197,7 +197,7 @@ function printVisMap(pos,vis,vM,hM,bM,mask) {
         ctx.fillStyle = "hsl(180, 60%, "+(50+pM[i][j][0]*20)+"%)";
       }
       ctx.fillRect(j*canvasScale,i*canvasScale,canvasScale,canvasScale);
-      if(i===vis&&j===vis){
+      if(i===vis-1&&j===vis-1){
         ctx.fillStyle = "#FF0000";
         ctx.moveTo(j*canvasScale,i*canvasScale);
         ctx.lineTo((j+1)*canvasScale-1,(i+1)*canvasScale-1);
@@ -211,9 +211,7 @@ function printVisMap(pos,vis,vM,hM,bM,mask) {
   document.body.lastElementChild.appendChild(e);
 }
 
-function checkVisibility(pPos,vis,hM,bM) {
-  //Note: alg currenntly appears to calculate vis from pos[0]-1 and pos[1]-1.
-  var pos = [pPos[0]+1,pPos[1]+1];
+function checkVisibility(pos,vis,hM,bM) {
   var mapVis = JSON.parse(JSON.stringify(hM));
   var mapGrad = JSON.parse(JSON.stringify(hM));
   var posH;
