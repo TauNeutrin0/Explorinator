@@ -4,6 +4,7 @@ var mapScale = 3;//scale of features will be 2^mapscale
 var mapVariance = 0.4;
 //var mapBiome;// 0-water 1-grassland, 2-forest, 3-desert, 4-rock, 5-beach, 6-marsh
 var maps;
+var knownMaps;
 var canvasScale = 6;
 var plyPos;
 var godMode = false;
@@ -106,12 +107,19 @@ function submitText(text) {
     NL();
   }else if(spltTxt[0] === "scout"){
     writeTxtSty("You look around you, and you see:");
-    printVisMap(plyPos,15,checkVisibility(plyPos,15,maps[0],maps[2]),maps[0],maps[2],true);
+    var vismap = checkVisibility(plyPos,15,maps[0],maps[2]);
+    copyMaps(maps, knownMaps, vismap);
+    printVisMap(plyPos,15,vismap,maps[0],maps[2],true);
     NL();
     NL();
-  }else if(spltTxt[0] === "!map"&&godMode){
-    writeTxtSty("You use the awesome power of the devs, and the entire world is revealed:");
-    writeMapBiome(maps[2],maps[0],plyPos);
+  }else if(spltTxt[0] === "map"){
+    if (godMode) {
+      writeTxtSty("You use the awesome power of the devs, and the entire world is revealed:");
+      writeMapBiome(maps[2],maps[0],plyPos);
+    } else {
+      writeTxtSty("You try to remember the maps you've already made...");
+      writeMapBiome(knownMaps[2], knownMaps[0], plyPos);
+    }
     NL();
     NL();
   }else{
@@ -128,10 +136,14 @@ function init() {
   var mapHeight = initMap(mapSize,mapScale,mapVariance,true);
   var mapHumidity = initMap(mapSize,mapScale,mapVariance,false);
   var mapBiome = genMapBiome(mapHeight,mapHumidity);
-  maps= new Array(3);
+  maps=new Array(3);
   maps[0]=mapHeight;
   maps[1]=mapHumidity;
   maps[2]=mapBiome;
+  knownMaps=new Array(3);
+  knownMaps[0] = initEmptyMap(mapSize, mapScale);
+  knownMaps[1] = initEmptyMap(mapSize, mapScale);
+  knownMaps[2] = initEmptyMap(mapSize, mapScale);
   NL();
   //writeMapBiome(mapBiome,mapHeight);
   plyPos=[Math.round(mapHeight.length / 2),Math.round(mapHeight[0].length / 2)];
@@ -423,8 +435,18 @@ function initMap(mSize,mScale,mVariance,water) {
     scale/=2;
   }
   return rMap;
-  
+
   //http://www.bluh.org/code-the-diamond-square-algorithm/
+}
+
+function initEmptyMap(mSize, mScale) {
+  var size = [Math.ceil(mSize[0]/Math.pow(2,mScale))*mScale+1,Math.ceil(mSize[1]/Math.pow(2,mScale))*mScale+1];
+  var map = new Array(size[0]);
+  for (var i = 0; i < size[0]; i++) {
+    map[i] = new Array(size[1]);
+    for (var j = 0; j < size[1]; j++) map[i][j] = -1;
+  }
+  return map;
 }
 
 function genMapBiome(mapHeight,mapHumidity) {
@@ -466,6 +488,18 @@ function genMapBiome(mapHeight,mapHumidity) {
     }
   }
   return mapBiome;
+}
+
+function copyMaps(src, dest, vis) {
+  for (var i = 0; i < vis.length; i++) {
+    for (var j = 0; j < vis[i].length; j++) {
+      if (vis[i][j]===1) {
+        dest[0][i][j] = src[0][i][j];
+        dest[1][i][j] = src[1][i][j];
+        dest[2][i][j] = src[2][i][j];
+      }
+    }
+  }
 }
 
 function getPoint(m,x,y) {
