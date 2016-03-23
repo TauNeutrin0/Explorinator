@@ -1,4 +1,4 @@
-/* eslint - env browser */
+/* eslint -env browser */
 var mapSize = [360, 360];
 var mapScale = 3; // scale of features will be 2^mapscale
 var mapVariance = 0.4;
@@ -30,7 +30,7 @@ function NL() {
 }
 
 function walk(dy, dx, descr, dist) {
-  if (!isNaN( + dist)) {
+  if (!isNaN(+dist)) {
     dist = Math.abs(Math.round(dist));
     writeTxt("You walk " + descr + ", " + dist + "km");
   } else {
@@ -61,13 +61,13 @@ function submitText(text) {
   } else if (spltTxt[0] === "walk" || spltTxt[0] == "w") {
     switch (spltTxt[1]) {
       case "north": case "n":
-        walk( - 1, 0, "north", spltTxt[2]);
+        walk(-1, 0, "north", spltTxt[2]);
         break;
       case "south": case "s":
         walk(1, 0, "south", spltTxt[2]);
         break;
       case "east": case "e":
-        walk(0, - 1, "east", spltTxt[2]);
+        walk(0, -1, "east", spltTxt[2]);
         break;
       case "west": case "w":
         walk(0, 1, "west", spltTxt[2]);
@@ -136,10 +136,10 @@ function printVisMap(pos, vis, vM, hM, bM, mask) {
         if (vM[i + pos[0] - vis + 1][j + pos[1] - vis + 1] === 1 || !mask) {
           pM[i][j] = [hM[i + pos[0] - vis + 1][j + pos[1] - vis + 1], bM[i + pos[0] - vis + 1][j + pos[1] - vis + 1]];
         } else {
-          pM[i][j] = [ - 1, - 1];
+          pM[i][j] = [-1, -1];
         }
       } else {
-        pM[i][j] = [ - 1, - 1];
+        pM[i][j] = [-1, -1];
       }
     }
   }
@@ -188,7 +188,7 @@ function checkVisibility(pos, vis, hM, bM) {
   var mapGrad = JSON.parse(JSON.stringify(hM));
   var posH;
   if (bM[pos[0]][pos[1]] === 0) {
-    posH = - 0.85;
+    posH = -0.85;
   } else {
     posH = hM[pos[0]][pos[1]] + 0.15;
   }
@@ -211,7 +211,7 @@ function checkVisibility(pos, vis, hM, bM) {
       if (i >= 0 && j >= 0 && i < mapVis.length && j < mapVis[0].length) {
         if (mapVis[i][j] === 1) {
           if (bM[i][j] === 0) {
-            mapGrad[i][j] = ( - 1 - posH) / Math.sqrt(Math.pow(i - pos[0], 2) + Math.pow(j - pos[1], 2));
+            mapGrad[i][j] = (-1 - posH) / Math.sqrt(Math.pow(i - pos[0], 2) + Math.pow(j - pos[1], 2));
           } else {
             mapGrad[i][j] = (hM[i][j] - posH) / Math.sqrt(Math.pow(i - pos[0], 2) + Math.pow(j - pos[1], 2));
           }
@@ -348,7 +348,7 @@ function initMap(mSize, mScale, mVariance, water) {
         while (y < 0) {
           y += rMap[0].length;
         }
-        rMap[(x%rMap.length)][(y%rMap[0].length)] = - 1;
+        rMap[(x%rMap.length)][(y%rMap[0].length)] = -1;
       } else {
         x = i;
         y = j;
@@ -414,7 +414,7 @@ function initEmptyMap(mSize, mScale) {
   var map = new Array(size[0]);
   for (var i = 0; i < size[0]; i++) {
     map[i] = new Array(size[1]);
-    for (var j = 0; j < size[1]; j++) map[i][j] = - 1;
+    for (var j = 0; j < size[1]; j++) map[i][j] = -1;
   }
   return map;
 }
