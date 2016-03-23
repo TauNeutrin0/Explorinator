@@ -67,10 +67,10 @@ function submitText(text) {
         walk(1, 0, "south", spltTxt[2]);
         break;
       case "east": case "e":
-        walk(0, -1, "east", spltTxt[2]);
+        walk(0, 1, "east", spltTxt[2]);
         break;
       case "west": case "w":
-        walk(0, 1, "west", spltTxt[2]);
+        walk(0, -1, "west", spltTxt[2]);
         break;
       default:
         writeTxt("You walk forwards and derpily trip over.");
