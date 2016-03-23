@@ -111,7 +111,7 @@ function handleText(text) {
     writeTxtSty("Help", null, true);
     NL();
     writeTxtNL("help|?              -- This help");
-    writeTxtNL("w[alk] <dir> [dist] -- Walk in dir, dist km is given");
+    writeTxtNL("w[alk] <dir> [dist] -- Walk in dir, dist km if given");
     writeTxtNL(" -> dir: n[orth]|s[outh]|w[est]|e[ast]");
     writeTxtNL("s[cout]             -- Explore your surroundings");
     writeTxtNL("m[ap]               -- Draw a map of your achievements so far");
