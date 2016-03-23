@@ -12,21 +12,28 @@ var godMode = false;
 function writeTxtSty(text, color, bold) {
   var e = document.createElement('span');
   e.innerHTML = text;
-  e.style.color = color;
+  if (color !== null) e.style.color = color;
   if (bold) { e.style["font-weight"] = "bold"; }
   document.body.lastElementChild.appendChild(e);
 }
 
 function writeTxt(text) {
-  document.body.lastElementChild.appendChild(document.createTextNode(text));
+  if (typeof text === "string") {
+    document.body.lastElementChild.appendChild(document.createTextNode(text));
+  } else {
+    document.body.lastElementChild.appendChild(text);
+  }
+}
+function writeTxtNL(text) {
+  writeTxt(text);
+  NL();
 }
 
 function NL() {
   // document.body.appendChild(document.createElement('br'));
-  var lastChild = document.body.lastElementChild;
-  if (lastChild && lastChild.children.length === 0)
-    lastChild.appendChild(document.createElement('br'));
-  document.body.appendChild(document.createElement('div'));
+  var line = document.createElement('div');
+  line.className = 'line';
+  document.body.appendChild(line);
 }
 
 function walk(dy, dx, descr, dist) {
@@ -49,16 +56,23 @@ function walk(dy, dx, descr, dist) {
 }
 
 function submitText(text) {
+  var input = document.getElementById("input");
+  if (! text) return;
+  writeTxtNL("> " + text);
+  handleText(text);
+  window.scrollTo(0,document.body.scrollHeight);
+  input.value = "";
+}
+function handleText(text) {
   text = text.toLowerCase();
   var spltTxt = text.split(" ");
   if (spltTxt[0] === "code") {
     var e = document.createElement('a');
-    e.innerHTML = "Explorinator on github";
+    e.innerHTML = "~ <em>Explorinator on GitHub</em> ~";
+    e.target = "_blank";
     e.href = "https://github.com/TauNeutrin0/Explorinator/";
-    document.body.appendChild(e);
-    NL();
-    NL();
-  } else if (spltTxt[0] === "walk" || spltTxt[0] == "w") {
+    writeTxt(e);
+  } else if (spltTxt[0] === "walk" || spltTxt[0] === "w") {
     switch (spltTxt[1]) {
       case "north": case "n":
         walk(-1, 0, "north", spltTxt[2]);
@@ -77,14 +91,14 @@ function submitText(text) {
         NL();
         break;
     }
-  } else if (spltTxt[0] === "scout") {
+  } else if (spltTxt[0] === "scout" || spltTxt[0] === "s") {
     writeTxtSty("You look around you, and you see:");
     var vismap = checkVisibility(plyPos, 15, maps[0], maps[2]);
     copyMaps(maps, knownMaps, vismap);
     printVisMap(plyPos, 15, vismap, maps[0], maps[2], true);
     NL();
     NL();
-  } else if (spltTxt[0] === "map") {
+  } else if (spltTxt[0] === "map" || spltTxt[0] === "m") {
     if (godMode) {
       writeTxtSty("You use the awesome power of the devs, and the entire world is revealed:");
       writeMapBiome(maps[2], maps[0], plyPos);
@@ -93,6 +107,15 @@ function submitText(text) {
       writeMapBiome(knownMaps[2], knownMaps[0], plyPos);
     }
     NL();
+  } else if (spltTxt[0] === "help" || spltTxt[0] === "?") {
+    writeTxtSty("Help", null, true);
+    NL();
+    writeTxtNL("help|?              -- This help");
+    writeTxtNL("w[alk] <dir> [dist] -- Walk in dir, dist km is given");
+    writeTxtNL(" -> dir: n[orth]|s[outh]|w[est]|e[ast]");
+    writeTxtNL("s[cout]             -- Explore your surroundings");
+    writeTxtNL("m[ap]               -- Draw a map of your achievements so far");
+    writeTxtNL("code                -- Credits");
     NL();
   } else {
     writeTxtSty("You said: '" + text + "'!", "blue", true);
@@ -103,8 +126,8 @@ function submitText(text) {
 
 function init() {
   NL();
-  writeTxt("You wake up lying on the floor. Where are you? I guess you'd better find out.");
   NL();
+  writeTxtNL("You wake up lying on the floor. Where are you? I guess you'd better find out.");
   var mapHeight = initMap(mapSize, mapScale, mapVariance, true);
   var mapHumidity = initMap(mapSize, mapScale, mapVariance, false);
   var mapBiome = genMapBiome(mapHeight, mapHumidity);
@@ -120,10 +143,15 @@ function init() {
   // writeMapBiome(mapBiome, mapHeight);
   plyPos = [Math.round(mapHeight.length / 2), Math.round(mapHeight[0].length / 2)];
   // plyPos = [50, 50];
+  writeTxtNL("You look around...");
   // Take a break! http://xkcd.com/kite/kite_trick.jpg
-  printVisMap(plyPos, 15, checkVisibility(plyPos, 15, mapHeight, mapBiome), mapHeight, mapBiome, false);
+  //printVisMap(plyPos, 15, checkVisibility(plyPos, 15, mapHeight, mapBiome), mapHeight, mapBiome, false);
   printVisMap(plyPos, 15, checkVisibility(plyPos, 15, mapHeight, mapBiome), mapHeight, mapBiome, true);
   NL();
+  NL();
+  var input = document.getElementById("input");
+  input.value = "";
+  input.focus();
 }
 
 function printVisMap(pos, vis, vM, hM, bM, mask) {
