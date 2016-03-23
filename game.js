@@ -151,7 +151,7 @@ function printVisMap(pos, vis, vM, hM, bM, mask) {
   var ctx = e.getContext("2d");
   for (i = 0; i < pM.length; i++) {
     for (j = 0; j < pM[i].length; j++) {
-      if (pM[i][j][1] ===- 1) {
+      if (pM[i][j][1] === -1) {
         ctx.fillStyle = "black";
       } else if (pM[i][j][1] === 0) {
         ctx.fillStyle = "blue";
@@ -294,7 +294,7 @@ function writeMapBiome(m, hM, pos) {
   var ctx = e.getContext("2d");
   for (i = 0; i < m.length; i++) {
     for (j = 0; j < m[i].length; j++) {
-      if (m[i][j] ===- 1) {
+      if (m[i][j] === -1) {
         ctx.fillStyle = "black";
       } else if (m[i][j] === 0) {
         ctx.fillStyle = "blue";
@@ -348,7 +348,7 @@ function initMap(mSize, mScale, mVariance, water) {
         while (y < 0) {
           y += rMap[0].length;
         }
-        rMap[(x%rMap.length)][(y%rMap[0].length)] = -1;
+        rMap[x % rMap.length][y % rMap[0].length] = -1;
       } else {
         x = i;
         y = j;
@@ -358,7 +358,7 @@ function initMap(mSize, mScale, mVariance, water) {
         while (y < 0) {
           y += rMap[0].length;
         }
-        rMap[(x%rMap.length)][(y%rMap[0].length)] = Math.random() * 2 - 1;
+        rMap[x % rMap.length][y % rMap[0].length] = Math.random() * 2 - 1;
       }
     }
   }
@@ -375,7 +375,7 @@ function initMap(mSize, mScale, mVariance, water) {
         while (y < 0) {
           y += rMap[0].length;
         }
-        rMap[(x%rMap.length)][(y%rMap[0].length)] = ((getPoint(rMap, i, j) + getPoint(rMap, i, j + scale) + getPoint(rMap, i + scale, j) + getPoint(rMap, i + scale, j + scale)) / 4.0) + (Math.random() * 2 - 1) * variance;
+        rMap[x % rMap.length][y % rMap[0].length] = ((getPoint(rMap, i, j) + getPoint(rMap, i, j + scale) + getPoint(rMap, i + scale, j) + getPoint(rMap, i + scale, j + scale)) / 4.0) + (Math.random() * 2 - 1) * variance;
       }
     }
     // Square
@@ -389,7 +389,7 @@ function initMap(mSize, mScale, mVariance, water) {
         while (y < 0) {
           y += rMap[0].length;
         }
-        rMap[(x%rMap.length)][(y%rMap[0].length)] = ((getPoint(rMap, i, j) + getPoint(rMap, i + scale, j) + getPoint(rMap, i + hS, j - hS) + getPoint(rMap, i + hS, j + hS)) / 4.0) + (Math.random() * 2 - 1) * variance;
+        rMap[x % rMap.length][y % rMap[0].length] = ((getPoint(rMap, i, j) + getPoint(rMap, i + scale, j) + getPoint(rMap, i + hS, j - hS) + getPoint(rMap, i + hS, j + hS)) / 4.0) + (Math.random() * 2 - 1) * variance;
         x = i;
         y = j + hS;
         while (x < 0) {
@@ -398,7 +398,7 @@ function initMap(mSize, mScale, mVariance, water) {
         while (y < 0) {
           y += rMap[0].length;
         }
-        rMap[(x%rMap.length)][(y%rMap[0].length)] = ((getPoint(rMap, i, j) + getPoint(rMap, i, j + scale) + getPoint(rMap, i - hS, j + hS) + getPoint(rMap, i + hS, j + hS)) / 4.0) + (Math.random() * 2 - 1) * variance;
+        rMap[x % rMap.length][y % rMap[0].length] = ((getPoint(rMap, i, j) + getPoint(rMap, i, j + scale) + getPoint(rMap, i - hS, j + hS) + getPoint(rMap, i + hS, j + hS)) / 4.0) + (Math.random() * 2 - 1) * variance;
       }
     }
     variance /= 2;
@@ -424,20 +424,20 @@ function genMapBiome(mapHeight, mapHumidity) {
   var i, j;
   for (i = 0; i < mapHeight.length; i++) {
     for (j = 0; j < mapHeight[i].length; j++) {
-      if (mapHeight[i][j] <- 0.8) {
+      if (mapHeight[i][j] < -0.8) {
         mapBiome[i][j] = 0;
-      } else if (mapHumidity[i][j] <- 0.8) {
+      } else if (mapHumidity[i][j] < -0.8) {
         mapBiome[i][j] = 3;
-      } else if (mapHeight[i][j] <- 0.75) {
+      } else if (mapHeight[i][j] < -0.75) {
         mapBiome[i][j] = 5;
-      } else if (mapHeight[i][j] <- 0.5) {
+      } else if (mapHeight[i][j] < -0.5) {
         if (mapHumidity[i][j] > 1.5) {
           mapBiome[i][j] = 6;
         } else {
           mapBiome[i][j] = 1;
         }
       } else if (mapHeight[i][j] < 0.5) {
-        if (mapHumidity[i][j] <- 0.75) {
+        if (mapHumidity[i][j] < -0.75) {
           mapBiome[i][j] = 3;
         } else if (mapHumidity[i][j] > 0.5) {
           mapBiome[i][j] = 2;
@@ -445,7 +445,7 @@ function genMapBiome(mapHeight, mapHumidity) {
           mapBiome[i][j] = 1;
         }
       } else if (mapHeight[i][j] < 0.75) {
-        if (mapHumidity[i][j] <- 0.85) {
+        if (mapHumidity[i][j] < -0.85) {
           mapBiome[i][j] = 3;
         } else if (mapHumidity[i][j] > 0.3) {
           mapBiome[i][j] = 2;
@@ -479,5 +479,5 @@ function getPoint(m, x, y) {
   while (y < 0) {
     y += m[0].length;
   }
-  return m[x%m.length][y%m[0].length];
+  return m[x % m.length][y % m[0].length];
 }
