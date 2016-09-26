@@ -4,6 +4,8 @@ body {
   margin: 0;
   padding: 50px 5px 30px;
   font-family: monospace;
+  background-color: #101010;
+  color: #ffffff;
 }
 
 #header {
