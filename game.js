@@ -46,12 +46,13 @@ function walk(dy, dx, descr, dist) {
   }
   var ny = plyPos[0] + dy * dist, nx = plyPos[1] + dx * dist;
   if (nx < 0 || ny < 0 || nx >= maps[0][0].length || ny >= maps[0].length) {
-    writeTxt(", but you don't make it. There is some kind of barrier blocking your way.");
+    writeTxtNL(", but you don't make it. There is some kind of barrier blocking your way.");
     NL();
     return;
   }
   plyPos[0] = ny;
   plyPos[1] = nx;
+  NL();
   NL();
 }
 
@@ -71,7 +72,8 @@ function handleText(text) {
     e.innerHTML = "~ <em>Explorinator on GitHub</em> ~";
     e.target = "_blank";
     e.href = "https://github.com/TauNeutrin0/Explorinator/";
-    writeTxt(e);
+    writeTxtNL(e);
+    NL();
   } else if (spltTxt[0] === "walk" || spltTxt[0] === "w") {
     switch (spltTxt[1]) {
       case "north": case "n":
@@ -87,7 +89,7 @@ function handleText(text) {
         walk(0, -1, "west", spltTxt[2]);
         break;
       default:
-        writeTxt("You walk forwards and derpily trip over.");
+        writeTxtNL("You walk forwards and derpily trip over.");
         NL();
         break;
     }
