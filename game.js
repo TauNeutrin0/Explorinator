@@ -166,7 +166,9 @@ function writeVisMap(pos, vis, vM, hM, bM, mask) {
     visHMap[i] = new Array(vis * 2 - 1);
     visBMap[i] = new Array(vis * 2 - 1);
     for (j = 0; j < 2 * vis - 1; j++) {
-        if (vM[i + pos[0] - vis + 1][j + pos[1] - vis + 1] === 1 || !mask) {
+      var insideMap = i + pos[0] - vis + 1 >= 0 && j + pos[1] - vis + 1 >= 0 && i + pos[0] - vis + 1 < vM.length && j + pos[1] - vis + 1 < vM[0].length;
+      var masked = insideMap && vM[i + pos[0] - vis + 1][j + pos[1] - vis + 1] !== 1 && mask;
+        if (insideMap && !masked) {
           visHMap[i][j] = hM[i + pos[0] - vis + 1][j + pos[1] - vis + 1];
           visBMap[i][j] = bM[i + pos[0] - vis + 1][j + pos[1] - vis + 1];
         } else {
