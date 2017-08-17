@@ -130,7 +130,7 @@ function handleText(text) {
 function init() {
   NL();
   NL();
-  writeTxtNL("You wake up lying on the floor. Where are you? I guess you'd better find out.");
+  writeTxtNL("You wake up lying on the ground. Where are you? I guess you'd better find out.");
   var mapHeight = initTerrainMap(mapSize, mapScale, mapVariance, true);
   var mapHumidity = initTerrainMap(mapSize, mapScale, mapVariance, false);
   var mapBiome = generateBiomeMap(mapHeight, mapHumidity);
