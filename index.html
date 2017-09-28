@@ -9,11 +9,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="game.js"></script>
   <script src="mapTools.js"></script>
+  <script src="names.js"></script>
 </head>
 <body onload="init()">
   <div id="header">Explore!</div>
   <div id="inputdiv">
     <span style="float: left">>&nbsp;</span><span id="inputwrapper"><input type="text" id="input" onkeydown="if (event.keyCode === 13) submitText(this.value);" autocomplete="off"/></span>
   </div>
+  <!--<div style="position:fixed;background:black;padding:5px;border-radius:3px;cursor:pointer;" onclick="init()">Run</div>-->
 </body>
 </html>

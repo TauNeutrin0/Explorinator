@@ -7,13 +7,13 @@
  */
 
 var biomes = [
-    {"id":0, "name":"water",     "hue":"240", "height":[null, -0.8],  "humidity":[null, null]},
-    {"id":5, "name":"beach",     "hue":"40",  "height":[null, -0.75], "humidity":[null, null]},
-    {"id":4, "name":"rock",      "hue":"270", "height":[0.75, null],  "humidity":[null, null]},
-    {"id":3, "name":"desert",    "hue":"60",  "height":[null, null],  "humidity":[null, -0.75]},
-    {"id":6, "name":"marsh",     "hue":"180", "height":[null, null],  "humidity":[0.85, null]},
-    {"id":2, "name":"forest",    "hue":"120", "height":[null, null],  "humidity":[0.3, null]},
-    {"id":1, "name":"grassland", "hue":"100", "height":[null, null],  "humidity":[null, null]}
+    {"id":0, "name":"water",     "hue":"240", "height":[null, -0.8],  "humidity":[null, null],  },
+    {"id":5, "name":"beach",     "hue":"40",  "height":[null, -0.75], "humidity":[null, null],  },
+    {"id":4, "name":"rock",      "hue":"270", "height":[0.75, null],  "humidity":[null, null],  },
+    {"id":3, "name":"desert",    "hue":"60",  "height":[null, null],  "humidity":[null, -0.75], },
+//    {"id":6, "name":"marsh",     "hue":"180", "height":[null, null],  "humidity":[0.85, null],  },
+    {"id":2, "name":"forest",    "hue":"120", "height":[null, null],  "humidity":[0.3, null],    },
+    {"id":1, "name":"grassland", "hue":"100", "height":[null, null],  "humidity":[null, null],  }
 ];
 
 

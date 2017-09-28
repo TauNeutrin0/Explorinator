@@ -1,10 +1,12 @@
 /*eslint-disable no-param-reassign */
+/*globals data_forestNames */
 var mapSize = [360, 360];
 var mapScale = 3; // scale of features will be 2^mapscale
 var mapVariance = 0.4;
 
 var maps;
 var knownMaps;
+var places = {};
 var canvasScale = 6;
 var plyPos;
 var godMode = false;
@@ -45,7 +47,8 @@ function walk(dy, dx, descr, dist) {
     writeTxt("You walk " + descr);
   }
   var ny = plyPos[0] + dy * dist, nx = plyPos[1] + dx * dist;
-  if (nx < 0 || ny < 0 || nx >= maps[0][0].length || ny >= maps[0].length) {
+  if (nx < 0 || ny < 0
+  || nx >= maps[0][0].length || ny >= maps[0].length) {
     writeTxtNL(", but you don't make it. There is some kind of barrier blocking your way.");
     NL();
     return;
@@ -138,6 +141,8 @@ function init() {
   maps[0] = mapHeight;
   maps[1] = mapHumidity;
   maps[2] = mapBiome;
+  //writeColorMap(initPlaces(maps[2]));
+  initPlaces(maps[2]);
   knownMaps = new Array(3);
   knownMaps[0] = initEmptyMap(mapSize, mapScale);
   knownMaps[1] = initEmptyMap(mapSize, mapScale);
@@ -155,6 +160,94 @@ function init() {
   var input = document.getElementById("input");
   input.value = "";
   input.focus();
+}
+
+function initPlaces(bM) {
+  var groupThreshold = 10;
+  
+  // Forest
+  var colourMap = new Array(bM.length);
+  var cellForestGroup = new Array(bM.length);
+  var forestGroups = []; // [[x1,y1],[x2,y2]]
+  // Determine if each cell has a high enough surround of forest to count as a place
+  var i, j, k, l,m;
+  for(i = 0; i < bM.length; i++) {
+    cellForestGroup[i] = new Array(bM[i].length);
+    colourMap[i] = new Array(bM[i].length);
+    for(j = 0; j < bM[i].length; j++) {
+      // Check surrounding 5*5 square for forest
+      var numForest = 0;
+      for(k = -2; k < 3; k++) for(l = -2; l < 3; l++) {
+        var inBounds =  i + k > 0 && i + k < bM.length && j + l > 0 && j + l < bM[i].length;
+        if(inBounds && bM[i+k][j+l] === 2) numForest++;
+      }
+      // If the number of surrounding forest cells is above threshold, add it to a group.
+      if(numForest > groupThreshold){
+        // Check if cell neighbours one numbered forest cell
+          // Number it the same and add cell to group
+        // If cell neighbours two differently numbered cells
+          // Number it the same as group A and set all cells in group B to be in group A
+        // If cell has no neighbouring forest, create new group
+        var aboveGroup = i-1 >= 0 ? cellForestGroup[i-1][j] : -1;
+        var leftGroup = j-1 >= 0 ? cellForestGroup[i][j-1] : -1;
+        if(aboveGroup !== -1) {
+          cellForestGroup[i][j] = aboveGroup;
+          forestGroups[aboveGroup].push([i, j]);
+          if(leftGroup !== -1 && leftGroup !== aboveGroup) {
+            var group = forestGroups[leftGroup];
+            for(m = 0; m < group.length; m++) {
+              cellForestGroup[ group[m][0] ][ group[m][1] ] = aboveGroup;
+              forestGroups[aboveGroup].push(group[m]);
+              forestGroups[leftGroup] = [];
+            }
+          }
+        } else if(leftGroup !== -1) {
+          cellForestGroup[i][j] = leftGroup;
+          forestGroups[leftGroup].push([i, j]);
+        } else {
+          cellForestGroup[i][j] = forestGroups.length;
+          forestGroups.push([[i,j]]);
+        }
+      } else {
+        cellForestGroup[i][j] = -1;
+      }
+      colourMap[i][j] = numForest > groupThreshold ? "black" : "white";
+    }
+  }
+  forestGroups = forestGroups.filter(function(n){ return n.length !== 0; });
+  console.log("Number of groups: " + forestGroups.length);
+  forestSizes = data_biomeNames[0].sizes;
+  for(i = 0; i < forestGroups.length; i++) {
+    var foundSize = null;
+    for(j = 0; j < forestSizes.length && foundSize === null; j++) {
+      var minSize = forestSizes[j].size[0];
+      var maxSize = forestSizes[j].size[1];
+      if((minSize === null || forestGroups[i].length >= minSize) &&
+         (maxSize === null || forestGroups[i].length <= maxSize)) {
+          foundSize = j;
+        }
+    }
+    if(foundSize === null) {
+      // Could not find size for group, remove item and decrement counter.
+      forestGroups.splice(i--, 1);
+    } else {
+      // Found correct size group, pick random nameset and generate name.
+      var namesets = forestSizes[foundSize].namesets;
+      var nameset = null;
+      var rand = Math.random();
+      for(j = 0; j < namesets.length && nameset === null; j++) {
+        rand -= namesets[j].probability;
+        if(rand < 0) nameset = namesets[j].nameset;
+      }
+      // Generate name
+      var forestName = "";
+      for(j = 0; j < nameset.length; j++) {
+        forestName += nameset[j][Math.floor(Math.random() * nameset[j].length)];
+      }
+      console.log("Name " + (i+1) + ": " + forestName + ";");
+    }
+  }
+  return colourMap;
 }
 
 function writeVisMap(pos, vis, vM, hM, bM, mask) {
@@ -193,7 +286,7 @@ function writeColorMap(map, pos) {
     for (j = 0; j < map[i].length; j++) {
       ctx.fillStyle = map[i][j];
       ctx.fillRect(j * canvasScale, i * canvasScale, canvasScale, canvasScale);
-      if (pos !== null && i === pos[0] && j === pos[1]) {
+      if (pos != null && i === pos[0] && j === pos[1]) {
         ctx.fillStyle = "#FF0000";
         ctx.moveTo(j * canvasScale, i * canvasScale);
         ctx.lineTo((j + 1) * canvasScale - 1, (i + 1) * canvasScale - 1);
